@@ -1,7 +1,49 @@
 import os
 import random
 
-deck = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14] * 4
+new_deck = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14] * 4
+
+LOSING_SCORE = 0
+WINNING_SCORE = 1
+TIE_SCORE = 0
+
+
+class AI_game:
+    def __init__(self):
+        self.deck = None
+        self.player_hand = None
+        self.dealer_hand = None
+
+    def start_game(self):
+        self.deck = list(new_deck)
+        random.shuffle(self.deck)
+        self.player_hand = deal(self.deck)
+        self.dealer_hand = deal(self.deck)
+        return total(self.player_hand)
+
+    def hit(self):
+        self.player_hand = hit(self.player_hand, self.deck)
+        return total(self.player_hand)
+
+    def stand(self):
+        while total(self.dealer_hand) < 16:
+            self.dealer_hand = hit(self.dealer_hand, self.deck)
+        return
+
+    def end_score(self):
+        player_score = total(self.player_hand)
+        dealer_score = total(self.dealer_hand)
+
+        if player_score > 21:
+            return LOSING_SCORE
+        if dealer_score > 21:
+            return WINNING_SCORE
+        if dealer_score < player_score:
+            return WINNING_SCORE
+        if dealer_score > dealer_score:
+            return LOSING_SCORE
+        else:
+            return TIE_SCORE
 
 
 def deal(deck):
@@ -45,7 +87,7 @@ def total(hand):
     return total
 
 
-def hit(hand):
+def hit(hand, deck):
     card = deck.pop()
     if card == 11:
         card = "J"
@@ -112,40 +154,40 @@ def score(dealer_hand, player_hand):
         print("Congratulations. Your score is higher than the dealer. You win\n")
 
 
-def game():
-    choice = 0
-    clear()
-    print("WELCOME TO BLACKJACK!\n")
-    dealer_hand = deal(deck)
-    player_hand = deal(deck)
-    while choice != "q":
-        print("The dealer is showing a " + str(dealer_hand[0]))
-        (
-            print(
-                "You have a"
-                + str(player_hand)
-                + " for a total of "
-                + str(total(player_hand))
-            )
-        )
-        blackjack(dealer_hand, player_hand)
-        choice = input("Do you want to [H]it, [S]tand, or [Q]uit: ").lower()
-        clear()
-        if choice == "h":
-            hit(player_hand)
-            while total(dealer_hand) < 17:
-                hit(dealer_hand)
-            score(dealer_hand, player_hand)
-            play_again()
-        elif choice == "s":
-            while total(dealer_hand) < 17:
-                hit(dealer_hand)
-            score(dealer_hand, player_hand)
-            play_again()
-        elif choice == "q":
-            print("Bye!")
-            exit()
+# def game():
+#     choice = 0
+#     clear()
+#     print("WELCOME TO BLACKJACK!\n")
+#     dealer_hand = deal(deck)
+#     player_hand = deal(deck)
+#     while choice != "q":
+#         print("The dealer is showing a " + str(dealer_hand[0]))
+#         (
+#             print(
+#                 "You have a"
+#                 + str(player_hand)
+#                 + " for a total of "
+#                 + str(total(player_hand))
+#             )
+#         )
+#         blackjack(dealer_hand, player_hand)
+#         choice = input("Do you want to [H]it, [S]tand, or [Q]uit: ").lower()
+#         clear()
+#         if choice == "h":
+#             hit(player_hand)
+#             while total(dealer_hand) < 17:
+#                 hit(dealer_hand)
+#             score(dealer_hand, player_hand)
+#             play_again()
+#         elif choice == "s":
+#             while total(dealer_hand) < 17:
+#                 hit(dealer_hand)
+#             score(dealer_hand, player_hand)
+#             play_again()
+#         elif choice == "q":
+#             print("Bye!")
+#             exit()
 
 
-if __name__ == "__main__":
-    game()
+# if __name__ == "__main__":
+#     game()
